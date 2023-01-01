@@ -23,6 +23,10 @@ public class User {
     private String password;
 
     private String role;
+    private String dateOfBirth;
+    private String nationalNumber;
+    private String fullName;
+    private String phone;
 
     private boolean NotLocked = true;
 
