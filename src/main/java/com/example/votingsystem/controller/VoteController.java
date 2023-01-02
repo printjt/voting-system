@@ -15,16 +15,19 @@ public class VoteController {
     private final VoteService voteService;
 
     @PostMapping("/vote")
+    @CrossOrigin
     public ResponseEntity<?> vote(@Valid @RequestBody VoteRequest voteRequest){
         return ResponseEntity.ok().body(voteService.vote(voteRequest));
     }
 
     @GetMapping("/vote/{voteId}")
+    @CrossOrigin
     public ResponseEntity<?> vote(@PathVariable Long voteId){
         return ResponseEntity.ok().body(voteService.getVote(voteId));
     }
 
     @GetMapping("/vote/confirm/{id}")
+    @CrossOrigin
     public ResponseEntity<?> confirmVote(@PathVariable Long id){
         return ResponseEntity.ok().body(voteService.confirmVote(id));
     }

@@ -15,16 +15,19 @@ public class CandidateController {
     private final CandidateService candidateService;
 
     @PostMapping("/candidate")
+    @CrossOrigin
     public ResponseEntity<?> candidate(@Valid @RequestBody NewCandidateRequest candidate){
         return ResponseEntity.ok().body(candidateService.save(candidate));
     }
 
     @GetMapping("/candidate/{id}")
+    @CrossOrigin
     public ResponseEntity<?> candidate(@PathVariable Long id){
         return ResponseEntity.ok().body(candidateService.getCandidate(id));
     }
 
     @GetMapping("/candidates")
+    @CrossOrigin
     public ResponseEntity<?> candidates(){
         return ResponseEntity.ok().body(candidateService.getCandidates());
     }
