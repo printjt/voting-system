@@ -1,5 +1,6 @@
 package com.example.votingsystem.dto.request;
 
+import com.example.votingsystem.model.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -18,4 +19,8 @@ public class LoginRequest {
     @JsonProperty(namespace = "password")
     @NotBlank(message = "Password is mandatory")
     private String password;
+
+    public static User toUserAuthData(User user){
+        return new User(user.getId(),user.getUsername(),null,user.getRole(),user.getDateOfBirth(),user.getNationalNumber(),user.getFullName(),user.getPhone(),user.isNotLocked(),user.isNotExpired(),user.isEnabled());
+    }
 }

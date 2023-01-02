@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,10 +36,12 @@ public class AuthService {
         Map<String, Object> res = new HashMap<>();
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
         if(authentication.isAuthenticated()){
+            Optional<User> user = userRepo.findByUsername(loginRequest.getUsername());
             List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
             String token = jwtUtils.getAccessToken(loginRequest, "Sudan Voting System" , roles);
             res.put("accessToken",token);
             res.put("role", roles.get(0));
+            res.put("user_data", LoginRequest.toUserAuthData(user.get()));
 
         }
 

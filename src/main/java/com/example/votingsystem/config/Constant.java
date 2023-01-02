@@ -43,6 +43,11 @@ public class Constant {
             public static final String msg = "Vote with ID Not Found";
         }
 
+        public static class VoteAlreadyExists {
+            public static final int code = -121;
+            public static final String msg = "Vote with national ID already exists";
+        }
+
         public static class VoteAlreadyConfirmed {
             public static final int code = -130;
             public static final String msg = "Vote has already benn confirmed";
