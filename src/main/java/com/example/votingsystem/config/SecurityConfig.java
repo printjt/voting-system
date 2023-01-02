@@ -64,7 +64,8 @@ public class SecurityConfig {
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/candidate").hasAnyAuthority("ADMIN"))
+                        .antMatchers("/candidate").hasAnyAuthority("ADMIN").antMatchers("/vote/confirm").hasAnyAuthority("ADMIN","MODERATOR"))
+
                 .authorizeRequests(auth -> auth
                         .antMatchers(PUBLIC_URLS).permitAll())
                 .authorizeRequests(auth -> auth
