@@ -38,6 +38,8 @@ public class AuthService {
             List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
             String token = jwtUtils.getAccessToken(loginRequest, "Sudan Voting System" , roles);
             res.put("accessToken",token);
+            res.put("role", roles.get(0));
+
         }
 
         return new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,res);
