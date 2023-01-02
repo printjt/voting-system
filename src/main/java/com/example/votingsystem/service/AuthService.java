@@ -36,7 +36,7 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
         if(authentication.isAuthenticated()){
             List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-            String token = jwtUtils.getAccessToken(loginRequest, "MaxNet" , roles);
+            String token = jwtUtils.getAccessToken(loginRequest, "Sudan Voting System" , roles);
             res.put("accessToken",token);
         }
 
