@@ -57,6 +57,20 @@ public class VoteService {
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
 
+    //todo says no user found even when national id is correct in user data
+    public GeneralResponse checkUserIdVote(Long id) {
+        Optional<Votes> optionalVotes = voteRepo.findById(id);
+        if (optionalVotes.isPresent()) {
+            Votes votes = optionalVotes.get();
+            Optional<User> optionalUser = userRepo.findByNationalNumber(optionalVotes.get().getNationalId().toString());
+          if(optionalUser.isPresent()){
+              new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, optionalUser.get());
+          }
+            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg,optionalVotes.get().getNationalId().toString());
+        }
+        return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
+    }
+
     private boolean validateConfirmVote(Votes votes, Optional<Candidate> optionalCandidate) {
         if (optionalCandidate.isPresent() && votes.isConfirmed()) {
             Candidate candidate = optionalCandidate.get();

@@ -31,4 +31,10 @@ public class VoteController {
     public ResponseEntity<?> confirmVote(@PathVariable Long id){
         return ResponseEntity.ok().body(voteService.confirmVote(id));
     }
+    @GetMapping("/vote/check-user/{id}")
+    @CrossOrigin
+    public ResponseEntity<?> checkinUserDataVote(@PathVariable Long id){
+        return ResponseEntity.ok().body(voteService.checkUserIdVote(id));
+    }
+    //checkUserIdVote
 }
