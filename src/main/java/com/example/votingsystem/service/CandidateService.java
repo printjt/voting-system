@@ -31,6 +31,18 @@ public class CandidateService {
         return checkCandidateExist(candidate.getName()) ?  new GeneralResponse(Constant.ResponseCode.CandidateAlreadyExists.code, Constant.ResponseCode.CandidateAlreadyExists.msg, null) : new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,candidateRepo.save(modelMapper.map(candidate, Candidate.class)));
     }
 
+
+
+    public GeneralResponse updateCandiate(NewCandidateRequest candidate,Long id) {
+         Optional<Candidate> newCandidate=candidateRepo.findById(id);
+         if(newCandidate.isPresent()){
+             newCandidate.get().setName(candidate.getName());
+
+             newCandidate.get().setParty(candidate.getParty());
+             new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, newCandidate);
+         }
+      return  new GeneralResponse(Constant.ResponseCode.CandidateNotFound.code, Constant.ResponseCode.CandidateNotFound.msg, id);
+    }
     private boolean checkCandidateExist(String name){
         return candidateRepo.findByName(name).isPresent();
     }

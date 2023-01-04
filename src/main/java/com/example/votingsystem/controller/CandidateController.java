@@ -33,4 +33,9 @@ public class CandidateController {
     }
 
 
+    @PutMapping("/candidate/{id}")
+    @CrossOrigin
+    public ResponseEntity<?> candidate(@Valid @RequestBody NewCandidateRequest candidate,@PathVariable Long id){
+        return ResponseEntity.ok().body(candidateService.updateCandiate(candidate,id));
+    }
 }
