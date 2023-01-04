@@ -31,4 +31,17 @@ public class VotingCycleService {
        // return ResponseEntity.ok().body(.startCycle(voteCycle));
 
     }
+
+     public GeneralResponse endCycle() throws Exception {
+        List<VoteCycle> voteCycleList= voteCycleRepo.findAll();
+        if(voteCycleList.size()>0){
+            voteCycleRepo.deleteAll();
+            return new GeneralResponse(0,"Vote Cycle already started","Vote Cycle already started");
+        }else {
+            return new GeneralResponse(0,"Success",null);
+
+        }
+        // return ResponseEntity.ok().body(.startCycle(voteCycle));
+
+    }
 }

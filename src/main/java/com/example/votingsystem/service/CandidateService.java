@@ -39,9 +39,10 @@ public class CandidateService {
              newCandidate.get().setName(candidate.getName());
 
              newCandidate.get().setParty(candidate.getParty());
-             new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, newCandidate);
+             candidateRepo.save(newCandidate.get());
+            return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, newCandidate);
          }
-      return  new GeneralResponse(Constant.ResponseCode.CandidateNotFound.code, Constant.ResponseCode.CandidateNotFound.msg, id);
+      return  new GeneralResponse(Constant.ResponseCode.CandidateNotFound.code, Constant.ResponseCode.CandidateNotFound.msg, null);
     }
     private boolean checkCandidateExist(String name){
         return candidateRepo.findByName(name).isPresent();

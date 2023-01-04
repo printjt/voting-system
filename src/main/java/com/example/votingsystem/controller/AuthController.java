@@ -29,7 +29,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @CrossOrigin
-    public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity register( @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok().body(authService.register(registerRequest));
     }
 

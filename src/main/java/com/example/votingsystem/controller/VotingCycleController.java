@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,7 +21,14 @@ public class VotingCycleController {
 
     @PostMapping("/start-cycle")
     @CrossOrigin
-    public ResponseEntity login(@Valid @RequestBody VoteCycle voteCycle) throws Exception {
+    public ResponseEntity cycle(@Valid @RequestBody VoteCycle voteCycle) throws Exception {
         return ResponseEntity.ok().body(votingCycleService.startCycle(voteCycle));
+    }
+
+
+    @DeleteMapping("/start-cycle")
+    @CrossOrigin
+    public ResponseEntity deleteCycle() throws Exception {
+        return ResponseEntity.ok().body(votingCycleService.endCycle());
     }
 }
