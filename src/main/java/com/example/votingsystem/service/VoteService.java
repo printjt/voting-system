@@ -66,13 +66,13 @@ public class VoteService {
           if(optionalUser.isPresent()){
               return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, optionalUser.get());
           }
-            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg,optionalUser.get());
+            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg,null);
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
 
     private boolean validateConfirmVote(Votes votes, Optional<Candidate> optionalCandidate) {
-        if (optionalCandidate.isPresent() && votes.isConfirmed()) {
+        if (optionalCandidate.isPresent() && !votes.isConfirmed()) {
             Candidate candidate = optionalCandidate.get();
             votes.setConfirmed(true);
             candidate.setVotes(candidate.getVotes() + 1);
