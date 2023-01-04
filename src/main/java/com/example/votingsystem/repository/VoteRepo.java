@@ -11,4 +11,7 @@ public interface VoteRepo extends JpaRepository<Votes, Long> {
 
     @Query("SELECT a FROM Votes a WHERE a.nationalId = :nationalId ")
     Optional<Votes> findByNationalId(@Param("nationalId") Long nationalId);
+
+    @Query("SELECT a FROM Votes a WHERE a.uniqueId = :uniqueId ")
+    Optional<Votes> findByUniqueId(@Param("uniqueId") String uniqueId);
 }

@@ -1,6 +1,7 @@
 package com.example.votingsystem.service;
 
 import com.example.votingsystem.config.Constant;
+import com.example.votingsystem.config.UniqueIdGenerator;
 import com.example.votingsystem.dto.GeneralResponse;
 import com.example.votingsystem.dto.request.VoteRequest;
 import com.example.votingsystem.model.Candidate;
@@ -12,6 +13,8 @@ import com.example.votingsystem.repository.VoteRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,7 @@ public class VoteService {
     private final UserRepo userRepo;
 
     public GeneralResponse vote(VoteRequest voteRequest) {
+        UniqueIdGenerator uniqueIdGenerator = new UniqueIdGenerator.UniqueIdGeneratorBuilder().useDigits(false).useLower(true).useUpper(false).build();
         Optional<Candidate> optionalCandidate = candidateRepo.findById(voteRequest.getCandidateId());
         Optional<User> optionalUser = userRepo.findByNationalNumber(voteRequest.getNationalId().toString());
         Optional<Votes> optionalVotes = voteRepo.findByNationalId(voteRequest.getNationalId());
@@ -34,10 +38,13 @@ public class VoteService {
         }
         if (optionalCandidate.isPresent()) {
             Candidate candidate = optionalCandidate.get();
+            String uniqueId = uniqueIdGenerator.generate(8);
             Votes votes = new Votes();
-            votes.setCandidateId(candidate).setConfirmed(false).setNationalId(voteRequest.getNationalId());
+            votes.setCandidateId(candidate).setConfirmed(false).setNationalId(voteRequest.getNationalId()).setUniqueId(uniqueId);
             voteRepo.save(votes);
-            return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null);
+            Map<String, Object> res = new HashMap<>();
+            res.put("unique_id",uniqueId);
+            return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, res);
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
@@ -62,6 +69,15 @@ public class VoteService {
         if (optionalVotes.isPresent()) {
             voteRepo.delete(optionalVotes.get());
             return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null);
+        }
+        return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
+    }
+
+    public GeneralResponse getUserDataWithUniqueId(String uniqueId){
+        Optional<Votes> optionalVotes = voteRepo.findByUniqueId(uniqueId);
+        if(optionalVotes.isPresent()){
+            Optional<User> user = userRepo.findByNationalNumber(optionalVotes.get().getNationalId().toString());
+            return user.map(value -> new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, value)).orElseGet(() -> new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null));
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }

@@ -23,5 +23,7 @@ public class Votes {
     @Column(unique = true)
     private Long nationalId;
 
+    private String uniqueId;
+
     private boolean confirmed;
 }
