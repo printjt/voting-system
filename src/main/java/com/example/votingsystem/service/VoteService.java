@@ -26,11 +26,11 @@ public class VoteService {
         Optional<Candidate> optionalCandidate = candidateRepo.findById(voteRequest.getCandidateId());
         Optional<User> optionalUser = userRepo.findByNationalNumber(voteRequest.getNationalId().toString());
         Optional<Votes> optionalVotes = voteRepo.findByNationalId(voteRequest.getNationalId());
-        if(optionalUser.isEmpty()){
-            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg,null);
+        if (optionalUser.isEmpty()) {
+            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null);
         }
-        if(optionalVotes.isPresent()){
-            return new GeneralResponse(Constant.ResponseCode.VoteAlreadyExists.code, Constant.ResponseCode.VoteAlreadyExists.msg,null);
+        if (optionalVotes.isPresent()) {
+            return new GeneralResponse(Constant.ResponseCode.VoteAlreadyExists.code, Constant.ResponseCode.VoteAlreadyExists.msg, null);
         }
         if (optionalCandidate.isPresent()) {
             Candidate candidate = optionalCandidate.get();
@@ -57,16 +57,26 @@ public class VoteService {
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
 
+    public GeneralResponse deleteVote(Long id) {
+        Optional<Votes> optionalVotes = voteRepo.findById(id);
+        if (optionalVotes.isPresent()) {
+            voteRepo.delete(optionalVotes.get());
+            return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null);
+        }
+        return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
+    }
+
+
     //todo says no user found even when national id is correct in user data
     public GeneralResponse checkUserIdVote(Long id) {
         Optional<Votes> optionalVotes = voteRepo.findById(id);
         if (optionalVotes.isPresent()) {
             Votes votes = optionalVotes.get();
             Optional<User> optionalUser = userRepo.findByNationalNumber(optionalVotes.get().getNationalId().toString());
-          if(optionalUser.isPresent()){
-              return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, optionalUser.get());
-          }
-            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg,null);
+            if (optionalUser.isPresent()) {
+                return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, optionalUser.get());
+            }
+            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null);
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }

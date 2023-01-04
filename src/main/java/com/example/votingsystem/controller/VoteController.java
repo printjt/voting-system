@@ -31,6 +31,12 @@ public class VoteController {
     public ResponseEntity<?> confirmVote(@PathVariable Long id){
         return ResponseEntity.ok().body(voteService.confirmVote(id));
     }
+
+    @DeleteMapping("/vote/confirm/{id}")
+    @CrossOrigin
+    public ResponseEntity<?> deleteVote(@PathVariable Long id){
+        return ResponseEntity.ok().body(voteService.deleteVote(id));
+    }
     @GetMapping("/vote/check-user/{id}")
     @CrossOrigin
     public ResponseEntity<?> checkinUserDataVote(@PathVariable Long id){
