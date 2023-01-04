@@ -64,9 +64,9 @@ public class VoteService {
             Votes votes = optionalVotes.get();
             Optional<User> optionalUser = userRepo.findByNationalNumber(optionalVotes.get().getNationalId().toString());
           if(optionalUser.isPresent()){
-              new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, optionalUser.get());
+              return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, optionalUser.get());
           }
-            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg,optionalVotes.get().getNationalId().toString());
+            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg,optionalUser.get());
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
