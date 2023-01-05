@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(maxAge = 900000000)
 public class CandidateController {
 
     private final CandidateService candidateService;

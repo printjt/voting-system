@@ -28,7 +28,7 @@ public class SecurityConfig {
 
 
 
-    String[] PUBLIC_URLS = {"/login", "/register"};
+    String[] PUBLIC_URLS = {"/login", "/register","/candidates"};
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService) throws Exception {
@@ -65,7 +65,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> auth
                         .antMatchers("/candidate/**").hasAnyAuthority("ADMIN").antMatchers("/vote/confirm").hasAnyAuthority("ADMIN","MODERATOR").antMatchers("/vote/check-user/**").hasAnyAuthority("ADMIN","MODERATOR"))
-
                 .authorizeRequests(auth -> auth
                         .antMatchers(PUBLIC_URLS).permitAll())
                 .authorizeRequests(auth -> auth
