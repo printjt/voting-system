@@ -22,7 +22,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    @CrossOrigin
+    @CrossOrigin()
     public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
         return ResponseEntity.ok().body(authService.login(loginRequest));
     }
