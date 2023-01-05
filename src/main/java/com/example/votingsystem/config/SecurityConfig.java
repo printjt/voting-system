@@ -67,8 +67,7 @@ public class SecurityConfig {
 
         return http
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .cors()
-                .and()
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> auth
                         .antMatchers("/candidate/**").hasAnyAuthority("ADMIN").antMatchers("/vote/confirm").hasAnyAuthority("ADMIN","MODERATOR").antMatchers("/vote/check-user/**").hasAnyAuthority("ADMIN","MODERATOR"))
