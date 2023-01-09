@@ -55,17 +55,17 @@ public class VoteService {
     }
 
     public GeneralResponse confirmVote(Long id) {
-        Optional<Votes> optionalVotes = voteRepo.findById(id);
+        Optional<Votes> optionalVotes = voteRepo.findByUniqueId(id.toString());
         if (optionalVotes.isPresent()) {
             Votes votes = optionalVotes.get();
-            Optional<Candidate> optionalCandidate = candidateRepo.findById(votes.getId());
+            Optional<Candidate> optionalCandidate = candidateRepo.findById(votes.getCandidateId().getId());
             return validateConfirmVote(votes, optionalCandidate) ? new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null) : new GeneralResponse(Constant.ResponseCode.VoteAlreadyConfirmed.code, Constant.ResponseCode.VoteAlreadyConfirmed.msg, null);
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
 
-    public GeneralResponse deleteVote(Long id) {
-        Optional<Votes> optionalVotes = voteRepo.findById(id);
+    public GeneralResponse deleteVote(String uniqueId) {
+        Optional<Votes> optionalVotes = voteRepo.findByUniqueId(uniqueId);
         if (optionalVotes.isPresent()) {
             voteRepo.delete(optionalVotes.get());
             return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null);
@@ -89,15 +89,13 @@ public class VoteService {
         if (optionalVotes.isPresent()) {
             Votes votes = optionalVotes.get();
             Optional<User> optionalUser = userRepo.findByNationalNumber(optionalVotes.get().getNationalId().toString());
-            if (optionalUser.isPresent()) {
-                return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, optionalUser.get());
-            }
-            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null);
+            return optionalUser.map(user -> new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, user)).orElseGet(() -> new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null));
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
 
     private boolean validateConfirmVote(Votes votes, Optional<Candidate> optionalCandidate) {
+        System.out.println("votes = " + votes.isConfirmed() + ", optionalCandidate = " + optionalCandidate.toString());
         if (optionalCandidate.isPresent() && !votes.isConfirmed()) {
             Candidate candidate = optionalCandidate.get();
             votes.setConfirmed(true);

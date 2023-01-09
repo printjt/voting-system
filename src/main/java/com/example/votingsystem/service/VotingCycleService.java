@@ -1,10 +1,14 @@
 package com.example.votingsystem.service;
 
 import com.example.votingsystem.dto.GeneralResponse;
+import com.example.votingsystem.dto.request.voteCycleRequest;
+import com.example.votingsystem.model.User;
 import com.example.votingsystem.model.VoteCycle;
 import com.example.votingsystem.repository.VoteCycleRepo;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,21 +18,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @RequiredArgsConstructor
 public class VotingCycleService {
-    VoteCycleRepo voteCycleRepo;
+    private final VoteCycleRepo voteCycleRepo;
 
-    public GeneralResponse startCycle(VoteCycle voteCycle) throws Exception {
+    private final ModelMapper modelMapper = new ModelMapper();
+
+
+    public GeneralResponse startCycle(voteCycleRequest voteCycle) throws Exception {
+        System.out.println("@@@@@@@@@@@@@@@@@@@");
+
+        System.out.println("voteCycle = " + voteCycle.toString());
        List<VoteCycle> voteCycleList= voteCycleRepo.findAll();
        if(voteCycleList.size()>0){
            return new GeneralResponse(-200,"Vote Cycle already started","Vote Cycle already started");
        }else {
-           voteCycleRepo.save(voteCycle);
+           VoteCycle voteCycle1= modelMapper.map(voteCycle, VoteCycle.class);
+           voteCycleRepo.save(voteCycle1);
            return new GeneralResponse(0,"Success",voteCycle);
 
        }
        // return ResponseEntity.ok().body(.startCycle(voteCycle));
+
+    }
+
+
+    public GeneralResponse checkCycle() throws Exception {
+        System.out.println("@@@@@@@@@@@@@@@@@@@");
+
+        List<VoteCycle> voteCycleList= voteCycleRepo.findAll();
+        if(voteCycleList.size()>0){
+            return new GeneralResponse(0,"Success","Vote Cycle has started");
+        }else {
+            return new GeneralResponse(-20,"Fail","No Cycle Started");
+        }
+        // return ResponseEntity.ok().body(.startCycle(voteCycle));
 
     }
 

@@ -38,7 +38,7 @@ public class SecurityConfig {
 
 
 
-    String[] PUBLIC_URLS = {"/login", "/register","/candidates"};
+    String[] PUBLIC_URLS = {"/login", "/register",};
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsServiceImpl userDetailsService) throws Exception {
