@@ -6,16 +6,20 @@ import com.example.votingsystem.dto.GeneralResponse;
 import com.example.votingsystem.dto.request.VoteRequest;
 import com.example.votingsystem.model.Candidate;
 import com.example.votingsystem.model.User;
+import com.example.votingsystem.model.VoteCycle;
 import com.example.votingsystem.model.Votes;
 import com.example.votingsystem.repository.CandidateRepo;
 import com.example.votingsystem.repository.UserRepo;
+import com.example.votingsystem.repository.VoteCycleRepo;
 import com.example.votingsystem.repository.VoteRepo;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,12 +28,19 @@ public class VoteService {
     private final VoteRepo voteRepo;
     private final CandidateRepo candidateRepo;
     private final UserRepo userRepo;
+    private final VoteCycleRepo voteCycleRepo;
 
-    public GeneralResponse vote(VoteRequest voteRequest) {
+    public GeneralResponse vote(VoteRequest voteRequest) throws ParseException {
         UniqueIdGenerator uniqueIdGenerator = new UniqueIdGenerator.UniqueIdGeneratorBuilder().useDigits(false).useLower(true).useUpper(false).build();
         Optional<Candidate> optionalCandidate = candidateRepo.findById(voteRequest.getCandidateId());
         Optional<User> optionalUser = userRepo.findByNationalNumber(voteRequest.getNationalId().toString());
         Optional<Votes> optionalVotes = voteRepo.findByNationalId(voteRequest.getNationalId());
+        List<VoteCycle> optionalVoteCycle = voteCycleRepo.findAll();
+
+        if (optionalVotes.isPresent() && checkIfVoteCycleExpired(optionalVoteCycle.stream().findFirst().get().getEndDate())){
+            return new GeneralResponse(Constant.ResponseCode.VoteCycleExpired.code, Constant.ResponseCode.VoteCycleExpired.msg, null);
+        }
+
         if (optionalUser.isEmpty()) {
             return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null);
         }
@@ -105,6 +116,12 @@ public class VoteService {
             return true;
         }
         return false;
+    }
+
+    private boolean checkIfVoteCycleExpired(LocalDateTime time) throws ParseException {
+        Date date = new Date();
+        Date voteCycleEndTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time.toString());
+        return !date.before(voteCycleEndTime);
     }
 
 }

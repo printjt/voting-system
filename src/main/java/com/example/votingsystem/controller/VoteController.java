@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,7 +17,7 @@ public class VoteController {
 
     @PostMapping("/vote")
     @CrossOrigin
-    public ResponseEntity<?> vote(@Valid @RequestBody VoteRequest voteRequest){
+    public ResponseEntity<?> vote(@Valid @RequestBody VoteRequest voteRequest) throws ParseException {
         return ResponseEntity.ok().body(voteService.vote(voteRequest));
     }
 

@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
 
 @Entity
 @Data
