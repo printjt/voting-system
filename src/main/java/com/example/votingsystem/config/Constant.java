@@ -53,6 +53,21 @@ public class Constant {
             public static final String msg = "Vote has already benn confirmed";
         }
 
+        public static class VoteCycleExpired {
+            public static final int code = -140;
+            public static final String msg = "Vote Cycle has expired";
+        }
+
+        public static class CsvException {
+            public static final int code = -140;
+            public static final String msg = "CSV Exception";
+        }
+
+        public static class CsvFileExtensionException {
+            public static final int code = -140;
+            public static final String msg = "File is not csv format";
+        }
+
 
 
 

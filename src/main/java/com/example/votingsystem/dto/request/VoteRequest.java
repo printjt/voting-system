@@ -14,4 +14,5 @@ public class VoteRequest {
 
     @NotNull(message = "national Id is mandatory")
     private Long nationalId;
+
 }
