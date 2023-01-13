@@ -65,8 +65,8 @@ public class VoteService {
         return optionalVotes.map(votes -> new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, votes)).orElseGet(() -> new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null));
     }
 
-    public GeneralResponse confirmVote(Long id) {
-        Optional<Votes> optionalVotes = voteRepo.findByUniqueId(id.toString());
+    public GeneralResponse confirmVote(String id) {
+        Optional<Votes> optionalVotes = voteRepo.findByUniqueId(id);
         if (optionalVotes.isPresent()) {
             Votes votes = optionalVotes.get();
             Optional<Candidate> optionalCandidate = candidateRepo.findById(votes.getCandidateId().getId());

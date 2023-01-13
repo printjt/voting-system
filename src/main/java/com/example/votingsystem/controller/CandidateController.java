@@ -21,6 +21,11 @@ public class CandidateController {
         return ResponseEntity.ok().body(candidateService.save(candidate));
     }
 
+    @DeleteMapping("/candidate/{id}")
+    public ResponseEntity<?> deleteCandidate(@PathVariable Long id){
+        return ResponseEntity.ok().body(candidateService.deleteCandidate(id));
+    }
+
     @GetMapping("/candidate/{id}")
     @CrossOrigin
     public ResponseEntity<?> candidate(@PathVariable Long id){

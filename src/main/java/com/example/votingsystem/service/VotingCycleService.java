@@ -30,12 +30,13 @@ public class VotingCycleService {
 
         System.out.println("voteCycle = " + voteCycle.toString());
        List<VoteCycle> voteCycleList= voteCycleRepo.findAll();
-       if(voteCycleList.size()>0){
-           return new GeneralResponse(-200,"Vote Cycle already started","Vote Cycle already started");
-       }else {
+       if(voteCycleList.isEmpty()){
            VoteCycle voteCycle1= modelMapper.map(voteCycle, VoteCycle.class);
            voteCycleRepo.save(voteCycle1);
            return new GeneralResponse(0,"Success",voteCycle);
+       }else {
+           return new GeneralResponse(-200,"Vote Cycle already started","Vote Cycle already started");
+
 
        }
        // return ResponseEntity.ok().body(.startCycle(voteCycle));
@@ -47,7 +48,7 @@ public class VotingCycleService {
         System.out.println("@@@@@@@@@@@@@@@@@@@");
 
         List<VoteCycle> voteCycleList= voteCycleRepo.findAll();
-        if(voteCycleList.size()>0){
+        if(!voteCycleList.isEmpty()){
             return new GeneralResponse(0,"Success","Vote Cycle has started");
         }else {
             return new GeneralResponse(-20,"Fail","No Cycle Started");
@@ -58,10 +59,11 @@ public class VotingCycleService {
 
      public GeneralResponse endCycle() throws Exception {
         List<VoteCycle> voteCycleList= voteCycleRepo.findAll();
-        if(voteCycleList.size()>0){
-            voteCycleRepo.deleteAll();
-            return new GeneralResponse(0,"Vote Cycle already started","Vote Cycle already started");
+        if(voteCycleList.isEmpty()){
+            return new GeneralResponse(-10,"Vote Cycle already empty","Vote Cycle already empty");
         }else {
+            voteCycleRepo.deleteAll();
+
             return new GeneralResponse(0,"Success",null);
 
         }

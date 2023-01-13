@@ -29,7 +29,7 @@ public class VoteController {
 
     @GetMapping("/vote/confirm/{id}")
     @CrossOrigin
-    public ResponseEntity<?> confirmVote(@PathVariable Long id){
+    public ResponseEntity<?> confirmVote(@PathVariable String id){
         return ResponseEntity.ok().body(voteService.confirmVote(id));
     }
 

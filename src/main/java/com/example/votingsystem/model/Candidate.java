@@ -22,5 +22,8 @@ public class Candidate {
     private String party;
 
     private int votes;
+    private String image;
+    private String description;
+
 
 }

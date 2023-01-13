@@ -8,6 +8,7 @@ import com.example.votingsystem.repository.CandidateRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
@@ -31,7 +32,16 @@ public class CandidateService {
         return checkCandidateExist(candidate.getName()) ?  new GeneralResponse(Constant.ResponseCode.CandidateAlreadyExists.code, Constant.ResponseCode.CandidateAlreadyExists.msg, null) : new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,candidateRepo.save(modelMapper.map(candidate, Candidate.class)));
     }
 
+    public GeneralResponse deleteCandidate(Long id){
+        Optional<Candidate> newCandidate=candidateRepo.findById(id);
+        if(newCandidate.isPresent()){
 
+            candidateRepo.delete(newCandidate.get());
+            return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null);
+        }
+        return  new GeneralResponse(Constant.ResponseCode.CandidateNotFound.code, Constant.ResponseCode.CandidateNotFound.msg, null);
+
+    }
 
     public GeneralResponse updateCandiate(NewCandidateRequest candidate,Long id) {
          Optional<Candidate> newCandidate=candidateRepo.findById(id);
