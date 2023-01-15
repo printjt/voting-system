@@ -51,10 +51,10 @@ public class AuthService {
     public GeneralResponse register(RegisterRequest registerRequest){
         User user = modelMapper.map(registerRequest,User.class);
         user.setPassword(encoder.encode(user.getPassword()));
-        return checkUserExist(registerRequest.getUsername()) ? new GeneralResponse(Constant.ResponseCode.UserAlreadyExists.code,Constant.ResponseCode.UserAlreadyExists.msg,null) : new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,userRepo.save(user));
+        return checkUserExist(registerRequest.getUsername(), registerRequest.getNationalNumber()) ? new GeneralResponse(Constant.ResponseCode.UserAlreadyExists.code,Constant.ResponseCode.UserAlreadyExists.msg,null) : new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,userRepo.save(user));
     }
 
-    private boolean checkUserExist(String username){
-        return userRepo.findByUsername(username).isPresent();
+    private boolean checkUserExist(String username, String nationalNumber){
+        return userRepo.findByUsernameOrNationalNumber(username, nationalNumber).isPresent();
     }
 }
