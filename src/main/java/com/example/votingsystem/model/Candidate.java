@@ -23,6 +23,7 @@ public class Candidate {
 
     private int votes;
 
+    @Lob
     private byte[] image;
 
     private String description;
