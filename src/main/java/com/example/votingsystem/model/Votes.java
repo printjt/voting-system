@@ -20,7 +20,8 @@ public class Votes {
     @JoinColumn(name = "candidate_id")
     private Candidate candidateId;
 
-    @Column(unique = true)
+    private String username;
+
     private Long nationalId;
 
     private String uniqueId;

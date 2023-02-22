@@ -26,7 +26,7 @@ public class User {
 
     private String role;
     private String dateOfBirth;
-    @Column(unique = true)
+
     private String nationalNumber;
     private String fullName;
     private String phone;
