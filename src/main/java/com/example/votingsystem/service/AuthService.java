@@ -55,6 +55,6 @@ public class AuthService {
     }
 
     private boolean checkUserExist(String username, String nationalNumber){
-        return userRepo.findByUsernameOrNationalNumber(username, nationalNumber).isPresent();
+        return userRepo.findByUsername(username).isPresent();
     }
 }
