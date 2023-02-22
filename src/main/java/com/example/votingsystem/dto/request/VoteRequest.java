@@ -12,7 +12,9 @@ public class VoteRequest {
     @NotNull(message = "candidate Id is mandatory")
     private Long candidateId;
 
-    @NotNull(message = "national Id is mandatory")
+    @NotNull(message = "username is mandatory")
+    private String username;
+
     private Long nationalId;
 
 }

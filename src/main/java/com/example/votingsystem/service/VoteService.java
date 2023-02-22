@@ -33,8 +33,8 @@ public class VoteService {
     public GeneralResponse vote(VoteRequest voteRequest) throws ParseException {
         UniqueIdGenerator uniqueIdGenerator = new UniqueIdGenerator.UniqueIdGeneratorBuilder().useDigits(false).useLower(true).useUpper(false).build();
         Optional<Candidate> optionalCandidate = candidateRepo.findById(voteRequest.getCandidateId());
-        Optional<User> optionalUser = userRepo.findByNationalNumber(voteRequest.getNationalId().toString());
-        Optional<Votes> optionalVotes = voteRepo.findByNationalId(voteRequest.getNationalId());
+        Optional<User> optionalUser = userRepo.findByUsername(voteRequest.getUsername());
+        Optional<Votes> optionalVotes = voteRepo.findByUsername(voteRequest.getUsername());
         List<VoteCycle> optionalVoteCycle = voteCycleRepo.findAll();
 
         if (optionalVotes.isPresent() && checkIfVoteCycleExpired(optionalVoteCycle.stream().findFirst().get().getEndDate())){
@@ -51,7 +51,7 @@ public class VoteService {
             Candidate candidate = optionalCandidate.get();
             String uniqueId = uniqueIdGenerator.generate(8);
             Votes votes = new Votes();
-            votes.setCandidateId(candidate).setConfirmed(false).setNationalId(voteRequest.getNationalId()).setUniqueId(uniqueId);
+            votes.setCandidateId(candidate).setConfirmed(false).setNationalId(voteRequest.getNationalId()).setUniqueId(uniqueId).setUsername(voteRequest.getUsername());
             voteRepo.save(votes);
             Map<String, Object> res = new HashMap<>();
             res.put("unique_id",uniqueId);
@@ -87,10 +87,22 @@ public class VoteService {
     public GeneralResponse getUserDataWithUniqueId(String uniqueId){
         Optional<Votes> optionalVotes = voteRepo.findByUniqueId(uniqueId);
         if(optionalVotes.isPresent()){
-            Optional<User> user = userRepo.findByNationalNumber(optionalVotes.get().getNationalId().toString());
+            Optional<User> user = userRepo.findByUsername(optionalVotes.get().getUsername());
             return user.map(value -> new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, value)).orElseGet(() -> new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null));
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
+    }
+
+
+    public GeneralResponse checkUserVoteByUsername(String username){
+
+
+        Optional<Votes> votes=voteRepo.findByUsername(username);
+//           Optional<User> user = userRepo.findByUsername(username);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAss");
+        System.out.println(votes.isPresent());
+            return votes.map(value -> new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg,  userRepo.findByUsername(username).get())).orElseGet(() -> new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null));
+
     }
 
 
@@ -118,10 +130,9 @@ public class VoteService {
         return false;
     }
 
-    private boolean checkIfVoteCycleExpired(LocalDateTime time) throws ParseException {
-        Date date = new Date();
-        Date voteCycleEndTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time.toString());
-        return !date.before(voteCycleEndTime);
+    private boolean checkIfVoteCycleExpired(LocalDateTime time) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        return !localDateTime.isBefore(time);
     }
 
 }

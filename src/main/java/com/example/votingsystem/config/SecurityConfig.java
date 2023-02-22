@@ -1,7 +1,6 @@
 package com.example.votingsystem.config;
 
 
-
 import com.example.votingsystem.exceptionHandler.AuthorizationDeniedHandler;
 import com.example.votingsystem.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,6 @@ import java.util.Arrays;
 public class SecurityConfig {
 
 
-
     String[] PUBLIC_URLS = {"/login", "/register",};
 
     @Bean
@@ -56,15 +54,8 @@ public class SecurityConfig {
 
 
     @Bean
-    public AuthorizationDeniedHandler authorizationDeniedHandler(){
+    public AuthorizationDeniedHandler authorizationDeniedHandler() {
         return new AuthorizationDeniedHandler();
-    }
-
-    @Component("userSecurity")
-    public class UserSecurity {
-        public boolean hasUserId(Authentication authentication, String username) {
-            return authentication.getPrincipal().equals(username);
-        }
     }
 
     @Bean
@@ -75,7 +66,11 @@ public class SecurityConfig {
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeRequests(auth -> auth
-                        .antMatchers("/candidate/**").hasAnyAuthority("ADMIN").antMatchers("/vote/confirm").hasAnyAuthority("ADMIN","MODERATOR").antMatchers("/vote/check-user/**").hasAnyAuthority("ADMIN","MODERATOR"))
+                        .antMatchers("/candidate/**").hasAnyAuthority("ADMIN")
+                        .antMatchers("/vote/confirm").hasAnyAuthority("ADMIN", "MODERATOR")
+                        .antMatchers("/vote/check-user/**").hasAnyAuthority("ADMIN", "MODERATOR")
+                        .antMatchers("/vote/username/{username}").hasAnyAuthority("ADMIN", "USER", "MODERATOR")
+                )
                 .authorizeRequests(auth -> auth
                         .antMatchers(PUBLIC_URLS).permitAll())
                 .authorizeRequests(auth -> auth
@@ -100,12 +95,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public FilterRegistrationBean filterRegistrationBean(){
+    public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean(new CORSFilter());
         registrationBean.setName("CORS FIlter");
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(1);
         return registrationBean;
+    }
+
+    @Component("userSecurity")
+    public class UserSecurity {
+        public boolean hasUserId(Authentication authentication, String username) {
+            return authentication.getPrincipal().equals(username);
+        }
     }
 }
 

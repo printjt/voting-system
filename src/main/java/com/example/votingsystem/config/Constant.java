@@ -45,7 +45,7 @@ public class Constant {
 
         public static class VoteAlreadyExists {
             public static final int code = -121;
-            public static final String msg = "Vote with national ID already exists";
+            public static final String msg = "Vote with national ID or username already exists";
         }
 
         public static class VoteAlreadyConfirmed {
