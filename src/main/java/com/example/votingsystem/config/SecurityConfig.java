@@ -70,6 +70,9 @@ public class SecurityConfig {
                         .antMatchers("/vote/confirm").hasAnyAuthority("ADMIN", "MODERATOR")
                         .antMatchers("/vote/check-user/**").hasAnyAuthority("ADMIN", "MODERATOR")
                         .antMatchers("/vote/username/{username}").hasAnyAuthority("ADMIN", "USER", "MODERATOR")
+                        .antMatchers("users/**").hasAnyAuthority("ADMIN")
+                        .antMatchers("/users").hasAnyAuthority("ADMIN")
+
                 )
                 .authorizeRequests(auth -> auth
                         .antMatchers(PUBLIC_URLS).permitAll())

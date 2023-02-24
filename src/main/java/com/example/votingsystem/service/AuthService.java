@@ -54,6 +54,26 @@ public class AuthService {
         return checkUserExist(registerRequest.getUsername(), registerRequest.getNationalNumber()) ? new GeneralResponse(Constant.ResponseCode.UserAlreadyExists.code,Constant.ResponseCode.UserAlreadyExists.msg,null) : new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,userRepo.save(user));
     }
 
+    public GeneralResponse users(){
+//        User user = modelMapper.map(registerRequest,User.class);
+//        user.setPassword(encoder.encode(user.getPassword()));
+//        return checkUserExist(registerRequest.getUsername(), registerRequest.getNationalNumber()) ? new GeneralResponse(Constant.ResponseCode.UserAlreadyExists.code,Constant.ResponseCode.UserAlreadyExists.msg,null) : new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,userRepo.save(user));
+
+
+        List<User> users=userRepo.findAllByRole("MODERATOR");
+        return new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,users);
+
+    }
+
+    public GeneralResponse delete(Long id){
+        Optional<User> user=userRepo.findById(id);
+        if (user.isPresent()) {
+            userRepo.delete(user.get());
+            return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null);
+        }else {
+            return new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null);
+        }
+    }
     private boolean checkUserExist(String username, String nationalNumber){
         return userRepo.findByUsername(username).isPresent();
     }
