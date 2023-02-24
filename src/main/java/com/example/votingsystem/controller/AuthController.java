@@ -36,7 +36,7 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.users());
     }
 
-    @GetMapping("/users/{id}")
+    @DeleteMapping("/users/{id}")
     @CrossOrigin
     public ResponseEntity users(@PathVariable Long id) {
         return ResponseEntity.ok().body(authService.delete(id));

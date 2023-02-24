@@ -55,11 +55,6 @@ public class AuthService {
     }
 
     public GeneralResponse users(){
-//        User user = modelMapper.map(registerRequest,User.class);
-//        user.setPassword(encoder.encode(user.getPassword()));
-//        return checkUserExist(registerRequest.getUsername(), registerRequest.getNationalNumber()) ? new GeneralResponse(Constant.ResponseCode.UserAlreadyExists.code,Constant.ResponseCode.UserAlreadyExists.msg,null) : new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,userRepo.save(user));
-
-
         List<User> users=userRepo.findAllByRole("MODERATOR");
         return new GeneralResponse(Constant.ResponseCode.Success.code,Constant.ResponseCode.Success.msg,users);
 
