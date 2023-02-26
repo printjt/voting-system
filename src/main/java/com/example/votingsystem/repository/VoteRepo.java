@@ -2,9 +2,11 @@ package com.example.votingsystem.repository;
 
 import com.example.votingsystem.model.Votes;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface VoteRepo extends JpaRepository<Votes, Long> {
@@ -17,4 +19,11 @@ public interface VoteRepo extends JpaRepository<Votes, Long> {
 
     @Query("SELECT a FROM Votes a WHERE a.uniqueId = :uniqueId ")
     Optional<Votes> findByUniqueId(@Param("uniqueId") String uniqueId);
+
+    @Query("SELECT a FROM Votes a WHERE a.candidateId.id = :candidateId ")
+    List<Votes> findByCandidateId(@Param("candidateId") Long candidateId);
+
+    @Modifying
+    @Query("Delete FROM Votes a WHERE a.candidateId.id = :candidateId ")
+    void deleteAllByCandidateId(@Param("candidateId") Long candidateId);
 }

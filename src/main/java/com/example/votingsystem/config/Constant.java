@@ -38,6 +38,11 @@ public class Constant {
             public static final String msg = "Candidate with name already exists";
         }
 
+        public static class CandidateHasVotes {
+            public static final int code = -112;
+            public static final String msg = "Candidate with id has votes";
+        }
+
         public static class VoteNotFound {
             public static final int code = -120;
             public static final String msg = "Vote with ID Not Found";
