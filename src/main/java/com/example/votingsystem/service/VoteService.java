@@ -66,7 +66,7 @@ public class VoteService {
     }
 
     public GeneralResponse confirmVote(String id) {
-        Optional<Votes> optionalVotes = voteRepo.findByUniqueId(id);
+        Optional<Votes> optionalVotes = voteRepo.findByUniqueIdOrUsername(id);
         if (optionalVotes.isPresent()) {
             Votes votes = optionalVotes.get();
             Optional<Candidate> optionalCandidate = candidateRepo.findById(votes.getCandidateId().getId());
@@ -76,22 +76,41 @@ public class VoteService {
     }
 
     public GeneralResponse deleteVote(String uniqueId) {
-        Optional<Votes> optionalVotes = voteRepo.findByUniqueId(uniqueId);
+        Optional<Votes> optionalVotes = voteRepo.findByUniqueIdOrUsername(uniqueId);
         if (optionalVotes.isPresent()) {
-            voteRepo.delete(optionalVotes.get());
-            return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null);
+            if(optionalVotes.get().isConfirmed()){
+                return new GeneralResponse(Constant.ResponseCode.VoteAlreadyConfirmed.code, Constant.ResponseCode.VoteAlreadyConfirmed.msg, null);
+
+            }else{
+                voteRepo.delete(optionalVotes.get());
+                return new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, null);
+            }
+
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
 
     public GeneralResponse getUserDataWithUniqueId(String uniqueId){
-        Optional<Votes> optionalVotes = voteRepo.findByUniqueId(uniqueId);
+        Optional<Votes> optionalVotes = voteRepo.findByUniqueIdOrUsername(uniqueId);
         if(optionalVotes.isPresent()){
-            Optional<User> user = userRepo.findByNationalNumber(optionalVotes.get().getNationalId().toString());
+            Optional<User> user = userRepo.findByUsername(optionalVotes.get().getUsername());
             return user.map(value -> new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg, value)).orElseGet(() -> new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null));
         }
         return new GeneralResponse(Constant.ResponseCode.VoteNotFound.code, Constant.ResponseCode.VoteNotFound.msg, null);
     }
+
+
+    public GeneralResponse checkUserVoteByUsername(String username){
+
+
+        Optional<Votes> votes=voteRepo.findByUsername(username);
+//           Optional<User> user = userRepo.findByUsername(username);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAss");
+        System.out.println(votes.isPresent());
+            return votes.map(value -> new GeneralResponse(Constant.ResponseCode.Success.code, Constant.ResponseCode.Success.msg,  userRepo.findByUsername(username).get())).orElseGet(() -> new GeneralResponse(Constant.ResponseCode.UserNotFound.code, Constant.ResponseCode.UserNotFound.msg, null));
+
+    }
+
 
 
     //todo says no user found even when national id is correct in user data

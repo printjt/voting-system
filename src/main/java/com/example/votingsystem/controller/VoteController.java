@@ -50,5 +50,15 @@ public class VoteController {
     public ResponseEntity<?> checkinUserDataVote(@PathVariable Long id){
         return ResponseEntity.ok().body(voteService.checkUserIdVote(id));
     }
+
+    @GetMapping("/vote/username/{username}")
+    @CrossOrigin
+    public ResponseEntity<?> checkinUserDataVote(@PathVariable String username){
+        return ResponseEntity.ok().body(voteService.checkUserVoteByUsername(username));
+    }
+
+
+
+
     //checkUserIdVote
 }

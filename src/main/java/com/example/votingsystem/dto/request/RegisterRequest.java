@@ -18,6 +18,7 @@ public class RegisterRequest {
     @NotBlank(message = "role is mandatory")
     private String role;
     private String dateOfBirth;
+//    @NotBlank(message = "national Number is mandatory")
     private String nationalNumber;
     private String fullName;
     private String phone;

@@ -26,4 +26,8 @@ public interface VoteRepo extends JpaRepository<Votes, Long> {
     @Modifying
     @Query("Delete FROM Votes a WHERE a.candidateId.id = :candidateId ")
     void deleteAllByCandidateId(@Param("candidateId") Long candidateId);
+
+
+    @Query("SELECT a FROM Votes a WHERE a.uniqueId = :uniqueId  OR a.username= :uniqueId")
+    Optional<Votes> findByUniqueIdOrUsername(String uniqueId);
 }
