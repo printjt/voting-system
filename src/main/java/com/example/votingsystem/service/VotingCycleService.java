@@ -57,8 +57,9 @@ public class VotingCycleService {
 
     }
 
-     public GeneralResponse endCycle() throws Exception {
+     public GeneralResponse endCycle() {
         List<VoteCycle> voteCycleList= voteCycleRepo.findAll();
+         System.out.println("LENGTH  CYCLE: "+voteCycleList.size());
         if(voteCycleList.isEmpty()){
             return new GeneralResponse(-10,"Vote Cycle already empty","Vote Cycle already empty");
         }else {

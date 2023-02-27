@@ -22,12 +22,11 @@ public class VotingCycleController {
     @PostMapping("/start-cycle")
     @CrossOrigin
     public ResponseEntity cycle(@Valid @RequestBody voteCycleRequest voteCycle) throws Exception {
-        System.out.println("WAYYYYYYYYYYYYYYY");
         return ResponseEntity.ok().body(votingCycleService.startCycle(voteCycle));
     }
 
 
-    @DeleteMapping("/start-cycle")
+    @DeleteMapping("/end-cycle")
     @CrossOrigin
     public ResponseEntity deleteCycle() throws Exception {
         return ResponseEntity.ok().body(votingCycleService.endCycle());
