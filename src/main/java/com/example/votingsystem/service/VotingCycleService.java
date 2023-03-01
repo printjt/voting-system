@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +46,19 @@ public class VotingCycleService {
 
 
     public GeneralResponse checkCycle() throws Exception {
-        System.out.println("@@@@@@@@@@@@@@@@@@@");
 
         List<VoteCycle> voteCycleList= voteCycleRepo.findAll();
+        LocalDateTime now=LocalDateTime.now();
         if(!voteCycleList.isEmpty()){
-            return new GeneralResponse(0,"Success","Vote Cycle has started");
+            VoteCycle cycle=voteCycleList.stream().findAny().get();
+            if((cycle.getStartDate().getMonth().getValue()>now.getMonth().getValue() || (cycle.getStartDate().getYear()>now.getYear()))||(cycle.getStartDate().getDayOfMonth()>now.getDayOfMonth() && cycle.getStartDate().getMonth().getValue()<=now.getMonth().getValue()))
+            {
+                return new GeneralResponse(-20,"Fail","No Cycle Started");
+
+            }else{
+                return new GeneralResponse(0,"Success","Vote Cycle has started");
+
+            }
         }else {
             return new GeneralResponse(-20,"Fail","No Cycle Started");
         }
